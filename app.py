@@ -22,6 +22,17 @@ def gen_markup():
     return markup
 
 
+def gen_markup2():
+    markup = InlineKeyboardMarkup(row_width=1)
+    markup.add(InlineKeyboardButton("भोजन और आवश्यक वस्तुएँ ना मिलना", callback_data="cb_food"),
+                InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
+                InlineKeyboardButton("चिकित्सा सुविधा नहीं मिलने की समस्या", callback_data="cb_shelter"),
+                InlineKeyboardButton("वाहन के लिए e-pass जारी करना", callback_data="cb_e-pass"),
+                InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_e-pass"),
+                InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_e-pass"),
+                InlineKeyboardButton("अन्य", callback_data="cb_e-pass"),
+    )
+
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message,
@@ -35,7 +46,14 @@ def callback_query(call):
     elif call.data == "cb_opt2":
         bot.answer_callback_query(call.id, "You chose option 2")
     elif call.data == "cb_opt3":
-        bot.answer_callback_query(call.id, "You chose option 3")
+        bot.answer_callback_query(call.id, "किसी भी समस्या के बारे में सूचित करें")
+        share_information()        
+
+
+@bot.message_handler(function=lambda message: True)
+def share_information(message):    
+    bot.reply_to(message, text="नीचे दिए गए विकल्पों में से एक का चयन करें",
+                reply_markup=gen_markup2())
 
 
 @bot.message_handler(func=lambda message: True)

@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 
 def gen_markup():
-    markup = InlineKeyboardMarkup(row_width=3)
-    markup.add(InlineKeyboardButton("Option 1", callback_data="cb_opt1"),
-                InlineKeyboardButton("Option 2", callback_data="cb_opt2"),
-                InlineKeyboardButton("Option 3", callback_data="cb_opt3")
+    markup = InlineKeyboardMarkup(row_width=1)
+    markup.add(InlineKeyboardButton("सरकार द्वारा प्रशंसित सभी योजनाओं को जानें", callback_data="cb_opt1"),
+                InlineKeyboardButton("Covid 19 के बारे में जानकारी प्राप्त करें", callback_data="cb_opt2"),
+                InlineKeyboardButton("किसी भी समस्या के बारे में सूचित करें", callback_data="cb_opt3")
     )
     return markup
 

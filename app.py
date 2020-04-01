@@ -31,10 +31,10 @@ def respond():
     # welcome message from the bot
     if text == "/start":
         # print welcome message
-        bot_welcome = bot_welcome()
+        welcome_msg = bot_welcome()
 
         # send the welcome message
-        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
+        bot.sendMessage(chat_id=chat_id, text=welcome_msg, reply_to_message_id=msg_id)
 
     else:
         try:
@@ -49,13 +49,13 @@ def respond():
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
-   s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
-   if s:
-       return "webhook setup ok"
-   else:
-       return "webhook setup failed"
+    s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
+    if s:
+        return "webhook setup ok"
+    else:
+        return "webhook setup failed"
 
 
 @app.route('/')
 def index():
-   return '.'
+    return '.'

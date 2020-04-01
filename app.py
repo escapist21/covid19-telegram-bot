@@ -16,8 +16,8 @@ app = Flask(__name__)
 def gen_markup():
     markup = InlineKeyboardMarkup(row_width=1)
     markup.add(InlineKeyboardButton("सरकार द्वारा प्रशंसित सभी योजनाओं को जानें", callback_data="cb_opt1"),
-                InlineKeyboardButton("Covid 19 के बारे में जानकारी प्राप्त करें", callback_data="cb_opt2"),
-                InlineKeyboardButton("किसी भी समस्या के बारे में सूचित करें", callback_data="cb_opt3")
+               InlineKeyboardButton("Covid 19 के बारे में जानकारी प्राप्त करें", callback_data="cb_opt2"),
+               InlineKeyboardButton("किसी भी समस्या के बारे में सूचित करें", callback_data="cb_opt3")
     )
     return markup
 
@@ -25,18 +25,18 @@ def gen_markup():
 def gen_markup2():
     markup = InlineKeyboardMarkup(row_width=1)
     markup.add(InlineKeyboardButton("भोजन और आवश्यक वस्तुएँ ना मिलना", callback_data="cb_food"),
-                InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
-                InlineKeyboardButton("चिकित्सा सुविधा नहीं मिलने की समस्या", callback_data="cb_shelter"),
-                InlineKeyboardButton("वाहन के लिए e-pass जारी करना", callback_data="cb_e-pass"),
-                InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_e-pass"),
-                InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_e-pass"),
-                InlineKeyboardButton("अन्य", callback_data="cb_e-pass"),
-    )
+               InlineKeyboardButton("चिकित्सा सुविधा नहीं मिलने की समस्या", callback_data="cb_healthcare"),
+               InlineKeyboardButton("वाहन के लिए e-pass जारी करना", callback_data="cb_e-pass"),
+               InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
+               InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_in_migrant"),
+               InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_out_migrant"),
+               InlineKeyboardButton("अन्य", callback_data="cb_others"),
+)
 
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message,
-                text='नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name), reply_markup=gen_markup())
+                 text='नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name), reply_markup=gen_markup())
     
 
 @bot.callback_query_handler(func=lambda call: True)
@@ -47,19 +47,27 @@ def callback_query(call):
         bot.answer_callback_query(call.id, "You chose option 2")
     elif call.data == "cb_opt3":
         bot.answer_callback_query(call.id, "किसी भी समस्या के बारे में सूचित करें")
-        share_information()        
+        share_information()
+    elif call.data == "cb_food":
+        bot.answer_callback_query(call.id, "food")
+    elif call.data == "cb_shelter":
+        bot.answer_callback_query(call.id, "shelter")
+    elif call.data == "cb_healthcare":
+        bot.answer_callback_query(call.id, "healthcare")
+    elif call.data == "cb_e-pass":
+        bot.answer_callback_query(call.id, "e-pass")
+    elif call.data == "cb_in_migrant":
+        bot.answer_callback_query(call.id, "in-migrant")
+    elif call.data == "cb_out_migrant":
+        bot.answer_callback_query(call.id, "out-migrant")
+    elif call.data == "cb_others":
+        bot.answer_callback_query(call.id, "others")    
 
 
 @bot.message_handler(function=lambda message: True)
 def share_information(message):    
     bot.reply_to(message, text="नीचे दिए गए विकल्पों में से एक का चयन करें",
-                reply_markup=gen_markup2())
-
-
-@bot.message_handler(func=lambda message: True)
-def message_handler(message):
-    bot.send_message(message.chat.id, "Choose preferred option",
-                    reply_markup=gen_markup())
+                 reply_markup=gen_markup2())
 
 
 @app.route('/' + TOKEN, methods=['POST'])

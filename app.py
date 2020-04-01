@@ -18,7 +18,7 @@ def gen_markup():
     markup.add(InlineKeyboardButton("सरकार द्वारा प्रशंसित सभी योजनाओं को जानें", callback_data="cb_opt1"),
                InlineKeyboardButton("Covid 19 के बारे में जानकारी प्राप्त करें", callback_data="cb_opt2"),
                InlineKeyboardButton("किसी भी समस्या के बारे में सूचित करें", callback_data="cb_opt3")
-    )
+               )
     return markup
 
 
@@ -30,14 +30,17 @@ def gen_markup2():
                InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
                InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_in_migrant"),
                InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_out_migrant"),
-               InlineKeyboardButton("अन्य", callback_data="cb_others"),
-)
+               InlineKeyboardButton("अन्य", callback_data="cb_others")
+               )
+    return markup
+
 
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.reply_to(message,
-                 text='नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name), reply_markup=gen_markup())
-    
+                 text='नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name), reply_markup=gen_markup()
+                 )
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
@@ -61,11 +64,11 @@ def callback_query(call):
     elif call.data == "cb_out_migrant":
         bot.answer_callback_query(call.id, "out-migrant")
     elif call.data == "cb_others":
-        bot.answer_callback_query(call.id, "others")    
+        bot.answer_callback_query(call.id, "others")
 
 
 @bot.message_handler(function=lambda message: True)
-def share_information(message):    
+def share_information(message):
     bot.reply_to(message, text="नीचे दिए गए विकल्पों में से एक का चयन करें",
                  reply_markup=gen_markup2())
 

@@ -1,5 +1,6 @@
 from flask import Flask, request
 import telebot
+from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from botspace.credentials import bot_token, URL
 
 global bot
@@ -14,12 +15,33 @@ app = Flask(__name__)
 
 @bot.message_handler(commands=['start'])
 def start(message):
-    bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
+    bot.reply_to(message,
+                'नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name))
 
 
-@bot.message_handler(func=lambda message: True, content_types=['text'])
-def echo_message(message):
-    bot.reply_to(message, message.text)
+def gen_markup():
+    markup = InlineKeyboardMarkup(row_width=3)
+    markup.add(InlineKeyboardButton("Option 1", callback_data="cb_opt1"),
+                InlineKeyboardButton("Option 2", callback_data="cb_opt2"),
+                InlineKeyboardButton("Option 3", callback_data="cb_opt3")
+    )
+    return markup
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_query(call):
+    if call.data == "cb_opt1":
+        bot.answer_callback_query(call.id, "You chose option 1")
+    elif call.data == "cb_opt2":
+        bot.answer_callback_query(call.id, "You chose option 2")
+    elif call.data == "cb_opt3":
+        bot.answer_callback_query(call.id, "You chose option 3")
+
+
+@bot.message_handler(func=lambda message: True)
+def message_handler(message):
+    bot.send_message(message.chat.id, "Choose preferred option",
+                    reply_markup=gen_markup())
 
 
 @app.route('/' + TOKEN, methods=['POST'])

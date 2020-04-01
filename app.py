@@ -19,7 +19,7 @@ def respond():
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
     chat_id = update.message.chat.id
-    msg_id = update.message.message.id
+    msg_id = update.message.message_id
 
     # encoding text for unicode compatibility
     text = update.message.text.encode('utf-8').decode()

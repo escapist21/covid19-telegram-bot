@@ -50,7 +50,7 @@ def callback_query(call):
         bot.answer_callback_query(call.id, "You chose option 2")
     elif call.data == "cb_opt3":
         bot.answer_callback_query(call.id, "किसी भी समस्या के बारे में सूचित करें")
-        share_information()
+        share_information(message="cb_opt3")
     elif call.data == "cb_food":
         bot.answer_callback_query(call.id, "food")
     elif call.data == "cb_shelter":
@@ -67,10 +67,11 @@ def callback_query(call):
         bot.answer_callback_query(call.id, "others")
 
 
-@bot.message_handler(function=lambda message: True)
+@bot.message_handler(commands=['share_info'])
 def share_information(message):
-    bot.reply_to(message, text="नीचे दिए गए विकल्पों में से एक का चयन करें",
-                 reply_markup=gen_markup2())
+    if message == "cb_opt3":
+        bot.reply_to(message, text="नीचे दिए गए विकल्पों में से एक का चयन करें",
+                     reply_markup=gen_markup2())
 
 
 @app.route('/' + TOKEN, methods=['POST'])

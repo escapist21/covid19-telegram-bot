@@ -13,12 +13,6 @@ bot = telebot.TeleBot(token=TOKEN)
 app = Flask(__name__)
 
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    bot.reply_to(message,
-                'नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name))
-
-
 def gen_markup():
     markup = InlineKeyboardMarkup(row_width=3)
     markup.add(InlineKeyboardButton("Option 1", callback_data="cb_opt1"),
@@ -27,6 +21,12 @@ def gen_markup():
     )
     return markup
 
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message,
+                text='नमस्कार {}, jharkhandCovid19 bot आपका स्वागत करता है\n\nनीचे दिए गए विकल्पों में से एक का चयन करें'.format(message.from_user.first_name), reply_markup=gen_markup())
+    
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):

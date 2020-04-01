@@ -1,50 +1,32 @@
-import re
 from flask import Flask, request
-import telegram
-from telebot.credentials import bot_token, bot_user_name, URL
-from telebot.auto_replies import bot_welcome
+import telebot
+from botspace.credentials import bot_token, URL
 
 global bot
 global TOKEN
 TOKEN = bot_token
-bot = telegram.Bot(token=TOKEN)
+bot = telebot.Telebot(token=TOKEN)
 
 
 # instantiate the Flask app
 app = Flask(__name__)
 
 
-@app.route('/{}'.format(TOKEN), methods=['POST'])
-def respond():
-    # retrieve the message in JSON and convert into telegram object
-    update = telegram.Update.de_json(request.get_json(force=True), bot)
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.reply_to(message, 'Hello, ' + message.from_user.first_name)
 
-    chat_id = update.message.chat.id
-    msg_id = update.message.message_id
 
-    # encoding text for unicode compatibility
-    text = update.message.text.encode('utf-8').decode()
+@bot.message_handler(func=lambda message: True, content_types=['text'])
+def echo_message(message):
+    bot.reply_to(message, message.text)
 
-    # for debugging purposes only
-    print("got text message: ", text)
 
-    # welcome message from the bot
-    if text == "/start":
-        # print welcome message
-        welcome_msg = bot_welcome()
-
-        # send the welcome message
-        bot.sendMessage(chat_id=chat_id, text=welcome_msg, reply_to_message_id=msg_id)
-
-    else:
-        try:
-            alt_welcome = """processing your reques"""
-            bot.sendMessage(chat_id=chat_id, text=alt_welcome, reply_to_message_id=msg_id)
-        except Exception:
-            bot.sendMessage(chat_id=chat_id, text="There was a problem in your message",
-                            reply_to_message_id=msg_id)
-
-    return 'ok'
+@app.route('/' + TOKEN, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(
+        request.stream.read().decode("utf-8"))])
+    return "!", 200
 
 
 @app.route('/set_webhook', methods=['GET', 'POST'])

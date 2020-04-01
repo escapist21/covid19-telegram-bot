@@ -23,16 +23,16 @@ def gen_markup():
 
 
 def gen_markup2():
-    markup = InlineKeyboardMarkup(row_width=1)
-    markup.add(InlineKeyboardButton("भोजन और आवश्यक वस्तुएँ ना मिलना", callback_data="cb_food"),
-               InlineKeyboardButton("चिकित्सा सुविधा नहीं मिलने की समस्या", callback_data="cb_healthcare"),
-               InlineKeyboardButton("वाहन के लिए e-pass जारी करना", callback_data="cb_e-pass"),
-               InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
-               InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_in_migrant"),
-               InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_out_migrant"),
-               InlineKeyboardButton("अन्य", callback_data="cb_others")
-               )
-    return markup
+    markup2 = InlineKeyboardMarkup(row_width=1)
+    markup2.add(InlineKeyboardButton("भोजन और आवश्यक वस्तुएँ ना मिलना", callback_data="cb_food"),
+                InlineKeyboardButton("चिकित्सा सुविधा नहीं मिलने की समस्या", callback_data="cb_healthcare"),
+                InlineKeyboardButton("वाहन के लिए e-pass जारी करना", callback_data="cb_e-pass"),
+                InlineKeyboardButton("आश्रय की समस्या", callback_data="cb_shelter"),
+                InlineKeyboardButton("झारखंड में फंसे", callback_data="cb_in_migrant"),
+                InlineKeyboardButton("झारखंड के बाहर फंसे", callback_data="cb_out_migrant"),
+                InlineKeyboardButton("अन्य", callback_data="cb_others")
+                )
+    return markup2
 
 
 @bot.message_handler(commands=['start'])
@@ -50,7 +50,7 @@ def callback_query(call):
         bot.answer_callback_query(call.id, "You chose option 2")
     elif call.data == "cb_opt3":
         bot.answer_callback_query(call.id, "किसी भी समस्या के बारे में सूचित करें")
-        share_information(message="cb_opt3")
+        share_information("cb_opt3")
     elif call.data == "cb_food":
         bot.answer_callback_query(call.id, "food")
     elif call.data == "cb_shelter":

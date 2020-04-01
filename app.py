@@ -31,7 +31,7 @@ def getMessage():
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
-    s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
+    s = bot.set_webhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))
     if s:
         return "webhook setup ok"
     else:

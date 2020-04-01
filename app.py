@@ -5,7 +5,7 @@ from botspace.credentials import bot_token, URL
 global bot
 global TOKEN
 TOKEN = bot_token
-bot = telebot.Telebot(token=TOKEN)
+bot = telebot.TeleBot(token=TOKEN)
 
 
 # instantiate the Flask app

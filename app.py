@@ -2,6 +2,7 @@ import re
 from flask import Flask, request
 import telegram
 from telebot.credentials import bot_token, bot_user_name, URL
+from telebot.auto_replies import bot_welcome
 
 global bot
 global TOKEN
@@ -30,7 +31,7 @@ def respond():
     # welcome message from the bot
     if text == "/start":
         # print welcome message
-        bot_welcome = """Welcome to jharkhand covid 19 bot"""
+        bot_welcome = bot_welcome()
 
         # send the welcome message
         bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)

@@ -1,8 +1,9 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from functools import wraps
+import os
 
-
+TOKEN = "1179864522:AAFA2-YjGNpFzHTKpMYZA3z4Jw5Y8KeMBLQ"
+PORT = int(os.environ.get('PORT', '5000'))
 # Stages
 FIRST, SECOND, THIRD = range(3)
 
@@ -181,7 +182,7 @@ def keyboard_query_response(update, context):
 
 
 def main():
-    updater = Updater(token="1179864522:AAFA2-YjGNpFzHTKpMYZA3z4Jw5Y8KeMBLQ", use_context=True)
+    updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     print("Bot started")
 
@@ -212,6 +213,12 @@ def main():
 
     # start the bot
     updater.start_polling()
+
+    # starting webhook
+    updater.start_webhook(listen="0.0.0.0",
+                            port=PORT,
+                            url_path=TOKEN)
+    updater.bot.set_webhook("https://jharkhandcovid19bot.herokuapp.com/" + TOKEN)
 
     # run the bot until pressed ctrl+c
     updater.idle()

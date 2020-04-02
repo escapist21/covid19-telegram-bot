@@ -1,5 +1,7 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, ConversationHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from functools import wraps
+
 
 # Stages
 FIRST, SECOND, THIRD = range(3)
@@ -7,6 +9,16 @@ FIRST, SECOND, THIRD = range(3)
 # Callback data
 ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE = range(9)
 
+
+def send_typing_action(func):
+    """Sends typing action while processing func command."""
+
+    @wraps(func)
+    def command_func(update, context, *args, **kwargs):
+        context.bot.send_chat_action(chat_id=update.effective_message.chat_id, action=ChatAction.TYPING)
+        return func(update, context,  *args, **kwargs)
+
+    return command_func
 
 def start(update, context):
     fname = update.message.from_user.first_name
@@ -26,7 +38,6 @@ def start(update, context):
     )
     # tell ConversationHandler that we're in state 'FIRST' now
     return FIRST
-
 
 def start_over(update, context):
     # Get callback query from update
@@ -64,7 +75,6 @@ def one(update, context):
         reply_markup=reply_markup
     )
     return SECOND
-
 
 def two(update, context):
     """show new choice of buttons"""
@@ -104,7 +114,6 @@ def three(update, context):
     
     return FIRST
 
-
 def four(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -135,7 +144,6 @@ def five(update, context):
     )
     return FIRST
 
-
 def six(update, context):
     """Show new choice of buttons"""
     query = update.callback_query
@@ -150,7 +158,6 @@ def six(update, context):
         reply_markup=reply_markup
     )
     return FIRST
-
 
 def seven(update, context):
     """Show new choice of buttons"""
@@ -167,7 +174,6 @@ def seven(update, context):
     )
     return FIRST
 
-
 def end(update, context):
     """Returns `ConversationHandler.END`, which tells the
     ConversationHandler that the conversation is over"""
@@ -178,9 +184,11 @@ def end(update, context):
     )
     return ConversationHandler.END
 
+def keyboard_query_response(update, context):
+    update.message.reply_text(
+        "मेरे साथ चैट करने के लिए केवल सूचीबद्ध विकल्पों का उपयोग करें"
+    )
 
-# def convert_uppercase(bot, update):
-#     update.message.reply_text(update.message.text.upper())
 
 def main():
     updater = Updater(token="1179864522:AAFA2-YjGNpFzHTKpMYZA3z4Jw5Y8KeMBLQ", use_context=True)
@@ -205,12 +213,12 @@ def main():
         },
         fallbacks=[CommandHandler('start', start)]
     )
-
+    
+    # set up MessageHandler to reply to random messages
+    random_response_handler = MessageHandler(filters=Filters.text, callback=keyboard_query_response)
     # add command handler to dispatcher
-    # start_handler = CommandHandler(command='start', callback=start)
-    # upper_case = MessageHandler(filters=Filters.text, callback=convert_uppercase)
     dispatcher.add_handler(conv_handler)
-    # dispatcher.add_handler(upper_case)
+    dispatcher.add_handler(random_response_handler)
 
     # start the bot
     updater.start_polling()

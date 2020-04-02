@@ -3,7 +3,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import os
 
 TOKEN = "1179864522:AAFA2-YjGNpFzHTKpMYZA3z4Jw5Y8KeMBLQ"
-PORT = int(os.environ.get('PORT', '5000'))
+#PORT = int(os.environ.get('PORT', '5000'))
 # Stages
 FIRST, SECOND, THIRD = range(3)
 
@@ -182,6 +182,14 @@ def keyboard_query_response(update, context):
 
 
 def main():
+    # setting to appropriate values
+    TOKEN = "1179864522:AAFA2-YjGNpFzHTKpMYZA3z4Jw5Y8KeMBLQ"
+    NAME = "jharkhandcovid19bot"
+    
+    # port is given by heroku
+    PORT = os.environ.get('PORT')
+
+    # set up updater
     updater = Updater(token=TOKEN, use_context=True)
     dispatcher = updater.dispatcher
     print("Bot started")
@@ -207,18 +215,19 @@ def main():
     
     # set up MessageHandler to reply to random messages
     random_response_handler = MessageHandler(filters=Filters.text, callback=keyboard_query_response)
+   
     # add command handler to dispatcher
     dispatcher.add_handler(conv_handler)
     dispatcher.add_handler(random_response_handler)
 
     # start the bot
-    updater.start_polling()
+    # updater.start_polling()
 
-    # starting webhook
+    #starting webhook
     updater.start_webhook(listen="0.0.0.0",
-                            port=PORT,
+                            port=(PORT),
                             url_path=TOKEN)
-    updater.bot.set_webhook("https://jharkhandcovid19bot.herokuapp.com/" + TOKEN)
+    updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
 
     # run the bot until pressed ctrl+c
     updater.idle()

@@ -228,9 +228,11 @@ def main():
                             port=(PORT),
                             url_path=TOKEN)
     updater.bot.setWebhook("https://{}.herokuapp.com/{}".format(NAME, TOKEN))
+    
+    return "Bot started"
 
     # run the bot until pressed ctrl+c
-    updater.idle()
+    # updater.idle()
 
 
 if __name__ == "__main__":
